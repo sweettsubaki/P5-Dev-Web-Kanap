@@ -24,8 +24,8 @@ function getCart(){
                 // Insertion de l'image
                 let productImg = document.createElement("img");
                 productDivImg.appendChild(productImg);
-                productImg.src = localStorageProduct[product].prodPic;
-                productImg.alt = localStorageProduct[product].prodAlt;
+                productImg.src = localStorageProduct[finalProduct].prodPic;
+                productImg.alt = localStorageProduct[finalProduct].prodAlt;
             
             // Insertion de l'élément "div"
             let productItemContent = document.createElement("div");
@@ -40,18 +40,18 @@ function getCart(){
                     // Insertion du titre h2
                     let productTitle = document.createElement("h2");
                     productItemContentTitlePrice.appendChild(productTitle);
-                    productTitle.innerHTML = localStorageProduct[product].prodName;
+                    productTitle.innerHTML = localStorageProduct[finalProduct].prodName;
                 
                     // Insertion de la couleur
                     let productColor = document.createElement("p");
                     productTitle.appendChild(productColor);
-                    productColor.innerHTML = localStorageProduct[product].prodColor;
+                    productColor.innerHTML = localStorageProduct[finalProduct].prodColor;
                     productColor.style.fontSize = "20px";
                 
                     // Insertion du prix
                     let productPrice = document.createElement("p");
                     productItemContentTitlePrice.appendChild(productPrice);
-                    productPrice.innerHTML = localStorageProduct[product].prodPrice + " €";
+                    productPrice.innerHTML = localStorageProduct[finalProduct].prodPrice + " €";
         
                 // Insertion de l'élément "div"
                 let productItemContentSettings = document.createElement("div");
@@ -71,7 +71,7 @@ function getCart(){
                         // Insertion de la quantité
                         let productQuantity = document.createElement("input");
                         productItemContentSettingsQuantity.appendChild(productQuantity);
-                        productQuantity.value = localStorageProduct[product].prodQuantity;
+                        productQuantity.value = localStorageProduct[finalProduct].prodQuantity;
                         productQuantity.classList.add("itemQuantity");
                         productQuantity.setAttribute("type", "number");
                         productQuantity.setAttribute("min", "1");
@@ -91,3 +91,84 @@ function getCart(){
     }
     }}
     getCart();
+
+//--------Function to total the prices
+function calculateTotalPrice(){
+
+    //retrieve how many products are added to the cart
+    let itemQuantities = document.getElementsByClassName('itemQuantity');
+    let quanLength = itemQuantities.length,
+    quantityProducts = 0;
+
+    for (let i = 0; i < quanLength; ++i) {
+        totalQuantity += itemQuantities[i].valueAsNumber;
+    }
+
+    let totalProductQuantity = document.getElementById('totalQuantity');
+    totalProductQuantity.innerHTML = totalQuantity;
+    console.log(totalQuantity);
+
+    //retrieving the resulting price
+    totalPrice = 0;
+
+    for (let i = 0; i < quanLength; ++i) {
+        totalPrice += (itemQuantities[i].valueAsNumber * localStorageProduct[i].prodPrice);
+    }
+
+    let productTotalPrice = document.getElementById('totalPrice');
+    productTotalPrice.innerHTML = totalPrice;
+    console.log(totalPrice);
+}
+calculateTotalPrice();
+
+
+//Modifying how many products are in the cart
+function modifyQuantity() {
+    let itemQuantitiesModification = document.querySelectorAll(".itemQuantity");
+
+    for (let k = 0; k < itemQuantitiesModification.length; k++){
+        itemQuantitiesModification[k].addEventListener("change" , (event) => {
+            event.preventDefault();
+
+            //Selection de l'element à modifier en fonction de son id ET sa couleur
+            let quantitiesModification = localStorageProduct[k].prodQuantity;
+            let modifiedQuantityValue = itemQuantitiesModification[k].valueAsNumber;
+            
+            const resultFind = localStorageProduct.find((el) => el.modifiedQuantityValue !== quantitiesModification);
+
+            resultFind.prodQuantity = modifiedQuantityValue;
+            localStorageProduct[k].prodQuantity = resultFind.prodQuantity;
+
+            localStorage.setItem("product", JSON.stringify(localStorageProduct));
+        
+            // refresh rapide
+            location.reload();
+        })
+    }
+}
+modifyQuantity();
+
+
+//Deleting an item
+function deleteProduct() {
+    let deleteItemButton = document.querySelectorAll(".deleteItem");
+
+    for (let j = 0; j < deleteItemButton.length; j++){
+        deleteItemButton[j].addEventListener("click" , (event) => {
+            event.preventDefault();
+
+            //Select which item to delete 
+            let deleteId = localStorageProduct[j].prodId;
+            let deleteColor = localStorageProduct[j].prodColor;
+
+            localStorageProduct = localStorageProduct.filter( el => el.prodId !== deleteId || el.prodColor !== deleteColor );
+            
+            localStorage.setItem("product", JSON.stringify(localStorageProduct));
+
+            //confirms delete + refresh page
+            alert("Ce produit a bien été supprimé du panier");
+            location.reload();
+        })
+    }
+}
+deleteProduct();
