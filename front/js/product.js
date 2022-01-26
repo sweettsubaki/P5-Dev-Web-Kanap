@@ -22,6 +22,9 @@ function getProduct(url, id){
         if (value){
             displayKanap(value);
         }
+        addToCartButton.addEventListener("click", (event)=>{
+            addToCart(value);
+        });
     })
 };
 
@@ -46,42 +49,39 @@ function displayKanap(canape){
     colorSelection.appendChild(divSettCoSelOption);
         divSettCoSelOption.setAttribute("value", canape.colors);
         divSettCoSelOption.innerHTML = "--SVP, choisissez une couleur --";
-    canape.colors.forEach(color => {
-        let divSettCoSelOption = document.createElement("option");
-        colorSelection.appendChild(divSettCoSelOption);
-        divSettCoSelOption.setAttribute("value", color);
-        divSettCoSelOption.innerHTML = color;
-        
-    });
-    addToCart(canape);
+        canape.colors.forEach(color => {
+            let divSettCoSelOption = document.createElement("option");
+            colorSelection.appendChild(divSettCoSelOption);
+            divSettCoSelOption.setAttribute("value", color);
+            divSettCoSelOption.innerText = color;
+        });
 };
+        
 
 
+
+    //Initializing local storage
+    let localStorageProduct = JSON.parse(localStorage.getItem("product"));
 //----------------Add To Cart-------------------
 //Listen to cart (adding 2 conditions : more than 0 products and less than 100
 function addToCart(canape) {
-
-    //getting the color
-    let colorChoice = colorSelection.value;
-
-    //getting the quantity
-    let quantityChoice = quantitySelection.value;
-
+    
+            //getting the color
+            let choosenColor = colorSelection.value;
+    
+            //getting the quantity
+            let quantityChoice = quantitySelection.value;
     //Which data are we adding to the cart ?
     let clickToAdd = {
         prodPic: canape.imageUrl,
         prodAlt: canape.altTxt,
         prodName: canape.name,
         prodId: productId,
-        prodColor: colorChoice,
+        prodColor: choosenColor,
         prodQuantity: Number(quantityChoice),
         prodPrice: canape.price
     };
     console.log(clickToAdd);
-
-    
-//Initializing local storage
-let localStorageProduct = JSON.parse(localStorage.getItem("product"));
 
     //Let's add a Confirmation popup 
     const confirmationPopup =() =>{
@@ -92,15 +92,13 @@ let localStorageProduct = JSON.parse(localStorage.getItem("product"));
     }
 
     //listening to the cart with the condition that it needs to be btw 0 & 100
-    addToCartButton.addEventListener("click", (event)=>{
-        if (quantitySelection.value > 0 && quantitySelection.value <=100 && quantitySelection.value != 0){
-
-      
+        if (quantitySelection.value > 0 && quantitySelection.value <=100 && quantitySelection.value != 0){  
         //IF There's 1+ article in the cart
-        if (localStorageProduct) {
+        //if (localStorageProduct) {
             const resultFind = localStorageProduct.find(
-            (el) => el.productId === productId && el.prodColor === colorChoice);
+            (el) => el.productId == productId /*&& el.prodColor == choosenColor*/);
             //IF the ordered product is already in the cart
+            console.log(resultFind);
             if (resultFind) {
                 let newQuantity = parseInt(clickToAdd.prodQuantity) + parseInt(resultFind.prodQuantity);
                 resultFind.prodQuantity = newQuantity;
@@ -115,16 +113,17 @@ let localStorageProduct = JSON.parse(localStorage.getItem("product"));
                 confirmationPopup();
             }
         //if the cart is empty
-        } else {
+        /*} else {
             localStorageProduct =[];
             localStorageProduct.push(clickToAdd);
             localStorage.setItem("product", JSON.stringify(localStorageProduct));
             console.table(localStorageProduct);
             confirmationPopup();
-        }}
-    });
+        }*/
+    }
+    
 };
 
-console.log(localStorage);
 
 getProduct("http://localhost:3000/api/products/", productId);
+console.log(localStorageProduct);
