@@ -57,20 +57,19 @@ function displayKanap(canape){
         });
 };
         
-
-
-
     //Initializing local storage
     let localStorageProduct = JSON.parse(localStorage.getItem("product"));
+    
 //----------------Add To Cart-------------------
 //Listen to cart (adding 2 conditions : more than 0 products and less than 100
 function addToCart(canape) {
     
-            //getting the color
-            let choosenColor = colorSelection.value;
+        //getting the color
+        let choosenColor = colorSelection.value;
     
-            //getting the quantity
-            let quantityChoice = quantitySelection.value;
+        //getting the quantity
+        let quantityChoice = quantitySelection.value;
+
     //Which data are we adding to the cart ?
     let clickToAdd = {
         prodPic: canape.imageUrl,
@@ -96,7 +95,7 @@ function addToCart(canape) {
         //IF There's 1+ article in the cart
         //if (localStorageProduct) {
             const resultFind = localStorageProduct.find(
-            (el) => el.productId == productId /*&& el.prodColor == choosenColor*/);
+            (el) => el.productId == productId && el.prodColor == choosenColor);
             //IF the ordered product is already in the cart
             console.log(resultFind);
             if (resultFind) {

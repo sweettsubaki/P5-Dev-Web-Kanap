@@ -1,12 +1,12 @@
-//Initializing local storage
-let localStorageProduct = JSON.parse(localStorage.getItem("product"));
+    //Initializing local storage
+    let localStorageProduct = JSON.parse(localStorage.getItem("product"));
 
-console.table(localStorageProduct);
+
 const anEmptyCart = document.getElementById("cart__items");
 
 // Si le panier est vide
 function getCart(){
-    if (localStorageProduct === null || localStorageProduct == 0) {
+    if (localStorageProduct == null || localStorageProduct == 0) {
         const emptyCart = `<p>Votre panier est vide</p>`;
         anEmptyCart.innerHTML = emptyCart;
     } else {
@@ -75,9 +75,10 @@ function getCart(){
                     productItemContentSettingsDelete.appendChild(productSupprimer);
                     productSupprimer.classList.add("deleteItem");
                     productSupprimer.innerHTML = "Supprimer";
+        }
     }
-    }}
-    getCart();
+}
+getCart();
 
 //--------Function to total the prices
 function calculateTotalPrice(){
@@ -159,3 +160,5 @@ function deleteProduct() {
     }
 }
 deleteProduct();
+
+console.table(localStorageProduct);
