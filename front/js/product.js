@@ -64,11 +64,11 @@ function displayKanap(canape){
 //Listen to cart (adding 2 conditions : more than 0 products and less than 100
 function addToCart(canape) {
     
-        //getting the color
-        let choosenColor = colorSelection.value;
+    //getting the color
+    let choosenColor = colorSelection.value;
     
-        //getting the quantity
-        let quantityChoice = quantitySelection.value;
+    //getting the quantity
+    let quantityChoice = quantitySelection.value;
 
     //Which data are we adding to the cart ?
     let clickToAdd = {
@@ -91,13 +91,11 @@ function addToCart(canape) {
     }
 
     //listening to the cart with the condition that it needs to be btw 0 & 100
-        if (quantitySelection.value > 0 && quantitySelection.value <=100 && quantitySelection.value != 0){  
+    if (quantitySelection.value > 0 && quantitySelection.value <=100 && quantitySelection.value != 0){  
         //IF There's 1+ article in the cart
-        //if (localStorageProduct) {
-            const resultFind = localStorageProduct.find(
-            (el) => el.productId == productId && el.prodColor == choosenColor);
+        if (localStorageProduct) {
+            const resultFind = localStorageProduct.find((el) => el.productId === productId && el.prodColor === choosenColor);
             //IF the ordered product is already in the cart
-            console.log(resultFind);
             if (resultFind) {
                 let newQuantity = parseInt(clickToAdd.prodQuantity) + parseInt(resultFind.prodQuantity);
                 resultFind.prodQuantity = newQuantity;
@@ -112,15 +110,14 @@ function addToCart(canape) {
                 confirmationPopup();
             }
         //if the cart is empty
-        /*} else {
+        } else {
             localStorageProduct =[];
             localStorageProduct.push(clickToAdd);
             localStorage.setItem("product", JSON.stringify(localStorageProduct));
             console.table(localStorageProduct);
             confirmationPopup();
-        }*/
+        }
     }
-    
 };
 
 
